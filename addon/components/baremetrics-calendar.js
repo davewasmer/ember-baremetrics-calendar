@@ -1,9 +1,9 @@
 /* global Calendar */
 
 import Ember from 'ember';
-import layout from '../templates/components/baremetrics-calendar';
 
 const computed = Ember.computed;
+const { equal } = Ember.computed;
 const run = Ember.run;
 
 /**
@@ -18,10 +18,9 @@ export default Ember.Component.extend({
   // -------------------------------------------------------------------------
   // Attributes
 
-  layout,
-
   classNames: [
-    'baremetrics-calendar'
+    'baremetrics-calendar',
+    'daterange'
   ],
 
   classNameBindings: [
@@ -43,20 +42,20 @@ export default Ember.Component.extend({
    * When used as a single date picker, `currentDate` should be the value of the
    * currently selected date.
    *
-   * Note: this value is purposely set to `undefined` as a default. See the
-   * `type` property for why.
-   *
    * @type {Date}
    */
-  currentDate: undefined,
+  currentDate: null,
 
   /**
    * When used as a double date picker (i.e. date ranges), `startDate` should be
    * the value of the currently selected start date.
    *
+   * Note: this value is purposely set to `undefined` as a default. See the
+   * `type` property for why.
+   *
    * @type {Date}
    */
-  startDate: null,
+  startDate: undefined,
 
   /**
    * When used as a double date picker (i.e. date ranges), `endDate` should be
@@ -167,15 +166,15 @@ export default Ember.Component.extend({
    *
    * If you don't supply a value, it will attempt to automatically detect by
    * checking to see if you supplied any value (including `null`) for
-   * `currentDate`. If so, it will be treated as `'single'`.
+   * `startDate`. If so, it will be treated as `'double'`.
    *
    * @type {String}
    */
-  type: computed('currentDate', function() {
-    if (Ember.typeOf(this.get('currentDate')) !== 'undefined') {
-      return 'single';
+  type: computed('startDate', function() {
+    if (Ember.typeOf(this.get('startDate')) !== 'undefined') {
+      return 'double';
     }
-    return 'double';
+    return 'single';
   }),
 
   /**
@@ -203,6 +202,7 @@ export default Ember.Component.extend({
    * @return {Object}
    */
   _buildCalendarConfig() {
+    let component = this;
     let config = {
       element: this.$(),
       format: {
@@ -212,7 +212,9 @@ export default Ember.Component.extend({
       },
       days_array: this.get('dayLabels'),
       presets: this.get('presets'),
-      callback: this._parseCallback.bind(this, this.sendAction.bind(this, 'onchange'))
+      callback() {
+        component._parseCallback(this);
+      }
     };
     if (this.get('type') === 'single') {
       config.current_date = this.get('currentDate');
@@ -225,6 +227,7 @@ export default Ember.Component.extend({
       config.format.preset = this.get('presetFormat');
       config.same_day_range = this.get('sameDayRange');
     }
+    return config;
   },
 
   /**
@@ -233,16 +236,13 @@ export default Ember.Component.extend({
    * relevant change data.
    *
    * @method _parseCallback
-   * @param onchange {Function} the action to invoke
+   * @param calendar {Calendar} the calendar instance
    * @private
    */
-  _parseCallback(onchange) {
+  _parseCallback({ current_date, start_date, end_date }) {
     run(() => {
-      if (this.current_date) {
-        onchange(this.current_date);
-      } else {
-        onchange({ startDate: this.start_date, endDate: this.end_date });
-      }
+      let result = start_date ? { startDate: start_date, endDate: end_date } : current_date;
+      this.sendAction('onchange', result);
     });
   }
 

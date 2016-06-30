@@ -1,8 +1,8 @@
 /*jshint node:true*/
 module.exports = {
-  description: ''
+  description: 'Add baremetrics-calendar dependencies',
   normalizeEntityName: function() {},
-  afterInstall: function(options) {
+  afterInstall: function() {
     this.addBowerPackageToProject('BaremetricsCalendar');
   }
 };

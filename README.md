@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/davewasmer/ember-baremetrics-calendar.svg?branch=master)](https://travis-ci.org/davewasmer/ember-baremetrics-calendar)
+
 # ember-baremetrics-calendar
 
 A wrapper for [the awesome date range picker from Baremetrics](https://github.com/Baremetrics/calendar).
@@ -13,6 +15,15 @@ $ ember install ember-baremetrics-calendar
 The supplied Ember component supports all the options of the underlying plugin,
 the only difference is that the options are camelCased rather than snake_cased
 like the original plugin.
+
+## Configuration
+
+See the [Baremetrics Calendar docs](https://github.com/Baremetrics/calendar#base-calendar-params)
+for all the available options. The component supports all of them - just
+camelCase the option names, and flatten nested objects.
+
+For example, to set the month jumper label format (`format.jump_month` in the
+underlying plugin), you'd pass in `{{baremetrics-calendar formatJumpMonth='MM'}}`.
 
 The calendar component supports two modes: single date entry, and date range
 ("double") entry.

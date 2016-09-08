@@ -23,16 +23,11 @@ export default Ember.Component.extend({
     'daterange'
   ],
 
-  classNameBindings: [
-    'isSingle:daterange--single',
-    'isDouble:daterange--double'
-  ],
-
   // -------------------------------------------------------------------------
   // Events
 
-  didInsertElement() {
-    this.set('calendar', new Calendar(this._buildCalendarConfig()));
+  didRender() {
+    this.set('calendar', this._buildCalendar());
   },
 
   // -------------------------------------------------------------------------
@@ -197,14 +192,16 @@ export default Ember.Component.extend({
   /**
    * Builds the config object that the Calendar constructor expects
    *
-   * @method _buildCalendarConfig
+   * @method _buildCalendar
    * @private
    * @return {Object}
    */
-  _buildCalendarConfig() {
+  _buildCalendar() {
     let component = this;
+    let element = Ember.$('<div class="baremetrics-calendar">');
+    this.$().empty().append(element);
     let config = {
-      element: this.$(),
+      element: element,
       format: {
         input: this.get('inputFormat'),
         jump_month: this.get('jumpMonthFormat'),
@@ -218,7 +215,8 @@ export default Ember.Component.extend({
     };
     if (this.get('type') === 'single') {
       config.current_date = this.get('currentDate');
-      config.required = this.get('required');
+      config.required = true;
+      element.addClass('daterange--single');
     } else {
       config.earliest_date = this.get('earliestDate');
       config.latest_date = this.get('latestDate');
@@ -226,8 +224,9 @@ export default Ember.Component.extend({
       config.end_date = this.get('endDate');
       config.format.preset = this.get('presetFormat');
       config.same_day_range = this.get('sameDayRange');
+      element.addClass('daterange--double');
     }
-    return config;
+    return new Calendar(config);
   },
 
   /**
@@ -247,4 +246,3 @@ export default Ember.Component.extend({
   }
 
 });
-

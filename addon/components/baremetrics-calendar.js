@@ -209,6 +209,7 @@ export default Ember.Component.extend({
       },
       days_array: this.get('dayLabels'),
       presets: this.get('presets'),
+      placeholder: this.get('placeholder'),
       callback() {
         component._parseCallback(this);
       }

@@ -209,13 +209,14 @@ export default Ember.Component.extend({
       },
       days_array: this.get('dayLabels'),
       presets: this.get('presets'),
+      placeholder: this.get('placeholder'),
       callback() {
         component._parseCallback(this);
       }
     };
     if (this.get('type') === 'single') {
       config.current_date = this.get('currentDate');
-      config.required = true;
+      config.required = this.get('required');
       element.addClass('daterange--single');
     } else {
       config.earliest_date = this.get('earliestDate');

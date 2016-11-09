@@ -11,7 +11,14 @@
     "start": "ember server",
     "test": "ember try:testall"
   },
-  "repository": "davewasmer/ember-baremetrics-calendar",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davewasmer/ember-baremetrics-calendar.git"
+  },
+  "homepage": "https://github.com/davewasmer/ember-baremetrics-calendar",
+  "bugs": {
+    "url": "https://github.com/davewasmer/ember-baremetrics-calendar/issues"
+  },
   "engines": {
     "node": ">= 0.10.0"
   },
